@@ -17,7 +17,7 @@
   Link : https://dribbble.com/shots/10452538-React-UI-Components
 -->
                 <div class="min-h-screen bg-gray-100 py-6 flex flex-col  sm:py-1">
-                    <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+                    <div class="relative py-3 w-full">
                         <div class="relative  bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
                             <div class="w-full mx-auto">
                                 <div class="flex items-center space-x-5">
@@ -48,6 +48,16 @@
                                             <label class="leading-loose">Price</label>
                                             <input type="text" name="price"
                                                 class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <label class="leading-loose">Colors</label>
+                                            <x-select-input type="text" name="colors"
+                                                class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
+                                                <option value="white">White</option>
+                                                <option value="black">Black</option>
+                                                <option value="red">Red</option>
+                                                <option value="blue">Blue</option>
+                                            </x-select-input>
                                         </div>
                                         <div class="flex flex-col">
                                             <label class="leading-loose">Short Description</label>
@@ -132,4 +142,23 @@
             </div>
         </div>
     </div>
+    <x-slot name="scripts">
+        <script>
+            tinymce.init({
+                selector: 'textarea',
+                license_key: 'gpl',
+                height: 500,
+                plugins: [
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'insertdatetime', 'media', 'table', 'help', 'wordcount'
+                ],
+                toolbar: 'undo redo | blocks | ' +
+                    'bold italic backcolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                    'removeformat | help',
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+            });
+        </script>
+    </x-slot>
 </x-app-layout>
