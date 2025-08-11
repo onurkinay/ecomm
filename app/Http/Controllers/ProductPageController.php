@@ -12,4 +12,11 @@ class ProductPageController extends Controller
 
         return view('pages.home', compact('products'));
     }
+
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+
+        return view('pages.product', compact('product'));
+    }
 }

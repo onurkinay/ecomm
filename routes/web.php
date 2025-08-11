@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ProductPageController::class, 'index'])->name('product.index');
+Route::get('/product/{id}', [ProductPageController::class, 'show'])->name('product.detail');
 
 Route::get('/dashboard', function () {
     return view('admin.dashboard');
