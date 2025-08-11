@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
 use App\Models\ProductColor;
 use App\Models\ProductImage;
-use Illuminate\Http\Request;
+use Faker\Core\File;
 
 class ProductController extends Controller
 {
@@ -87,15 +88,68 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = Product::with(['colors', 'images'])->findOrFail($id);
+        $colors = $product->colors->pluck('name')->toArray();
+
+        return view('admin.product.edit', compact('product', 'colors'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductUpdateRequest $request, string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->short_description = $request->short_description;
+        $product->qty = $request->qty;
+        $product->sku = $request->sku;
+        $product->description = $request->description;
+
+        if ($request->hasFile('image')) {
+            File::delete(public_path($product->image));
+            $imagePath = $request->file('image')->store('', 'public');
+            $product->image = $imagePath;
+        }
+
+        $product->save();
+
+        // insert colors
+        if ($request->has('colors') && $request->filled('colors')) {
+            // Delete existing colors
+            ProductColor::where('product_id', $product->id)->delete();
+
+            foreach ($request->colors as $color) {
+                ProductColor::create([
+                    'product_id' => $product->id,
+                    'name' => $color,
+                ]);
+            }
+        }
+
+        if ($request->hasFile('images')) {
+            // Delete existing images
+            foreach ($product->images as $existingImage) {
+                File::delete(public_path($existingImage->path));
+
+            }
+            $product->images()->delete();
+
+            foreach ($request->file('images') as $image) {
+                $fileName = $image->store('', 'public');
+                $filePath = 'uploads/'.$fileName;
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'path' => $filePath,
+                ]);
+            }
+        }
+
+        $product->save();
+
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     /**
