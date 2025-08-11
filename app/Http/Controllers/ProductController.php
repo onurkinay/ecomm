@@ -7,7 +7,7 @@ use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
 use App\Models\ProductColor;
 use App\Models\ProductImage;
-use Faker\Core\File;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
