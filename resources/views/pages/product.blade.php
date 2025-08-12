@@ -68,7 +68,9 @@
                         <h3 class="text-lg font-semibold mb-2">Color:</h3>
                         <div class="flex space-x-2">
                             @foreach ($product->colors as $color)
-                                <button class="w-8 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2"
+                                <button onClick="changeColor('{{ $color->name }}')"
+                                    class="w-8 h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 productColor"
+                                    data-color="{{ $color->name }}"
                                     style="background-color: {{ $color->name }}; focus:ring-color: {{ $color->name }}">
                                 </button>
                             @endforeach
@@ -83,7 +85,7 @@
                     </div>
 
                     <div class="flex space-x-4 mb-6">
-                        <button
+                        <button id="addToCart"
                             class="bg-indigo-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="size-6">
@@ -112,9 +114,44 @@
         </div>
 
         <script>
+            function changeColor(color) {
+                $('.productColor').removeClass('selected');
+                $('.productColor[data-color="' + color + '"]').addClass('selected');
+                $('.productColor[data-color="' + color + '"]').css('border', '2px solid transparent');
+            }
+
             function changeImage(src) {
                 document.getElementById('mainImage').src = src;
             }
+
+            $(document).ready(function() {
+                $('#addToCart').on('click', function(e) {
+                    e.preventDefault();
+                    var productId = {{ $product->id }};
+                    var quantity = $('#quantity').val();
+                    var color = $('.productColor.selected').data('color');
+
+                    $.ajax({
+                        url: "{{ route('cart.add') }}",
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            id: productId,
+                            quantity: quantity,
+                            color: color
+                        },
+                        beforeSend: function() {
+                            // Show a loading indicator or disable the button
+                        },
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(xhr) {
+                            console.error(xhr.responseText);
+                        }
+                    });
+                });
+            });
         </script>
     </div>
 @endsection

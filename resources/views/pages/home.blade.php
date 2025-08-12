@@ -1,13 +1,13 @@
 @extends('pages.layouts.app')
 @section('content')
-    <div class="w-1/2 px-5 py-5">
+    <div class=" px-5 py-5">
         <h1 class="text-3xl font-bold">Welcome to Our E-commerce Site</h1>
         <p class="mt-4">Discover our range of products and enjoy great deals!</p>
 
         <div class=" w-full flex justify-center mt-8 ">
-            <div class="product w-full flex">
+            <div class="product w-full grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @foreach ($products as $product)
-                    <a href="{{ route('product.detail', $product->id) }}" class="group relative block overflow-hidden p-5">
+                    <a href="{{ route('product.detail', $product->id) }}" class="group relative block overflow-hidden ">
                         <button
                             class="absolute end-4 top-4 z-10 rounded-full bg-white p-1.5 text-gray-900 transition hover:text-gray-900/75">
                             <span class="sr-only">Wishlist</span>

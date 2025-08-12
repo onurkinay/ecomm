@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddToCardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\ProfileController;
@@ -7,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ProductPageController::class, 'index'])->name('product.index');
 Route::get('/product/{id}', [ProductPageController::class, 'show'])->name('product.detail');
+
+Route::post('/add-to-cart', [AddToCardController::class, 'store'])->name('cart.add');
 
 Route::get('/dashboard', function () {
     return view('admin.dashboard');
